@@ -14,6 +14,12 @@ var relayr = RELAYR.init({
 var dev1
 var dev2
 
+deleteButton = $('<button />').addClass('deleteButton').text('x');
+
+$(".deleteMe").on("click", function() {
+    $(this).closest("li").remove();
+});
+
 // in order to do anything other than get straight readings, you have to log in
 relayr.login({
     // the login function returns a few options: success or error (I think?)
@@ -25,18 +31,19 @@ relayr.login({
         $(".users").text(userEmail);
 
         // this will list all the devices associated with an account
-        relayr.devices().getDevice({
-            deviceId: keys.DEVICE_ID
-        }, function(foundDevice) {
-            foundDevice.delete()
-        }, function(err) {})
+        // relayr.devices().getDevice({
+        //     deviceId: keys.DEVICE_ID
+        // }, function(foundDevice) {
+        //     foundDevice.delete()
+        // }, function(err) {})
 
         relayr.devices().getAllDevices(function(devices) {
                 // loops through the object holding the devices, x gives you an index
                 for (x in devices) {
+
                     // tack the object[index].name on to the list displayed in the html
                     $('<ul>').text(devices[x].name).appendTo('.devices');
-                    devices[x].delete()
+
                 }
                 // console.log(devices)
             },
@@ -104,13 +111,42 @@ relayr.login({
                 // loops through the object holding the groups, x gives you an index
                 for (x in transmitters) {
                     // tack the object[index].name on to the list displayed in the html
-                    $('<ul>').text(transmitters[x].name).appendTo('.transmitters');
+                    $('<ul>').text(transmitters[x].name + " : " + transmitters[x].id).appendTo('.transmitterlist');
                 }
+
+
             },
             function(err) {
                 console.log("err", err)
             }
         );
+
+        // delete a transmitter from the list
+        // $(".delete").click(function(transmitters) {
+        //     relayr.transmitters().delete({
+        //             text(transmitters[0].id);
+        //         },
+        //         function(success) {
+        //             location.reload();
+        //         }, function(err) {
+        //             console.log(err)
+        //         })
+        // });
+        $(".delete").click(function() {
+            relayr.transmitters().getTransmitters(function(transmitters) {
+                var deleteId = String(transmitters[0].id);
+                console.log(deleteId);
+                relayr.transmitters().delete({
+                    id: deleteId
+                }, function(success) {
+                    location.reload();
+                }, function(err) {
+                    console.log(err)
+                })
+            }, function(err) {
+                console.log("err", err)
+            });
+        });
 
     } //end of the success parameter in the login sequence. Why is there no error option?
 });
