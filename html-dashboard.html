@@ -25,10 +25,25 @@
 	<h1>Models</h1>
 		<h4 class="models"></h4>
 	<!-- don't know what a transmitter is... -->
-	<h1>Transmitters (WunderBar master modules?)</h1>
+	<h1>Transmitters</h1>
 		<h4 class="transmitters"></h4>
 			<ul class = "transmitterlist"></ul>
-			<button class="delete">Delete one transmitter</button>
+			<div class="button-group">
+	        <a href="#" class="btn btn-info" id = "delete">Delete top transmitter</a>
+	      </div>
+	      <br>
+			<!-- input for the new name for the transmitter -->
+			<form>
+	          	<div class="form-group">
+	            	<textarea class="form-control status-box" rows="1" placeholder="Enter a new name for the top transmitter"></textarea>
+	          	</div>
+        	</form>
+	      <!-- button to save the new name for the transmitter -->
+	      <div class="button-group">
+	        <a href="#" class="btn btn-info" id = "updateName">save</a>
+	      </div>
+		
+			
 	<!-- finally at the end, load the scripts -->
   <!-- this is the file that holds your sensitive data -->
   <script src = "api-keys.js"></script>
