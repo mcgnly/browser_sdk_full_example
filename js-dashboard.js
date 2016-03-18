@@ -132,7 +132,7 @@ relayr.login({
         //             console.log(err)
         //         })
         // });
-        $(".delete").click(function() {
+        $("#delete").click(function() {
             relayr.transmitters().getTransmitters(function(transmitters) {
                 var deleteId = String(transmitters[0].id);
                 console.log(deleteId);
@@ -143,6 +143,25 @@ relayr.login({
                 }, function(err) {
                     console.log(err)
                 })
+            }, function(err) {
+                console.log("err", err)
+            });
+        });
+
+        $("#updateName").click(function() {
+            relayr.transmitters().getTransmitters(function(transmitters) {
+                var updateId = String(transmitters[0].id);
+                console.log(updateId);
+                relayr.transmitters().update({
+                        id: updateId
+                    }, {
+                        name: $('.status-box').val()
+                    },
+                    function(success) {
+                        location.reload();
+                    }, function(err) {
+                        console.log(err)
+                    })
             }, function(err) {
                 console.log("err", err)
             });
