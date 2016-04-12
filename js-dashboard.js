@@ -11,12 +11,6 @@ var relayr = RELAYR.init({
 var dev1
 var dev2
 
-// deleteButton = $('<button />').addClass('deleteButton').text('x');
-
-// $(".deleteMe").on("click", function() {
-//     $(this).closest("li").remove();
-// });
-
 // in order to do anything other than get straight readings, you have to log in
 relayr.login({
     // the login function returns success or error, 
@@ -119,58 +113,46 @@ relayr.login({
                     // tack the object[index].name on to the list displayed in the html
                     $('<ul>').text(msg[x].name + " : " + msg[x].id).appendTo('.transmitterlist');
                 }
+
+                //define what happens when you click the delete button
+                $("#delete").click(function() {
+                    var deleteId = String(msg[0].id);
+                    //give the command to actually delete it
+                    relayr.transmitters().delete().then(
+                        function fulfilled(msg) {
+                            location.reload();
+                        },
+                        function rejected(err) {
+
+                        }
+                    );
+                });
+
+                //define what happens when you click the "update name" button
+                $("#updateName").click(function() {
+                    //get the ID of the transmitter at the top of the list
+                    var updateId = String(msg[0].id);
+                    //give the command to update the name of the transmitter with the top ID with the text from the input box
+                    relayr.transmitters().update().then(
+                        function fulfilled(msg) {
+                            // location.reload(); {
+                            //     id: updateId
+                            // }, {
+                            //     name: $('.status-box').val()
+                            // }
+                        },
+                        function rejected(err) {
+
+                        });
+                });
+
             },
+
             //if the promise resolves as rejected it will log this error
             function rejected(err) {
                 console.log("error, the promise was rejected")
             }
         );
 
-        //define what happens when you click the delete button
-        $("#delete").click(function() {
-            //get the ID of the transmitter at the top of the list
-            relayr.transmitters().getTransmitters(function(transmitters) {
-                var deleteId = String(transmitters[0].id);
-                //give the command to actually delete it
-                relayr.transmitters().delete({
-                        id: deleteId
-                    },
-                    //if it works, reload the page
-                    function(success) {
-                        location.reload();
-                    },
-                    //if not, log the error
-                    function(err) {
-                        console.log(err)
-                    })
-            }, function(err) {
-                console.log("err", err)
-            });
-        });
-
-        //define what happens when you click the "update name" button
-        $("#updateName").click(function() {
-            //get the ID of the transmitter at the top of the list
-            relayr.transmitters().getTransmitters(function(transmitters) {
-                var updateId = String(transmitters[0].id);
-                //give the command to update the name of the transmitter with the top ID with the text from the input box
-                relayr.transmitters().update({
-                        id: updateId
-                    }, {
-                        name: $('.status-box').val()
-                    },
-                    //reload if successful
-                    function(success) {
-                        location.reload();
-                    },
-                    //log the error if not
-                    function(err) {
-                        console.log(err)
-                    })
-            }, function(err) {
-                console.log("err", err)
-            });
-        });
-
-    }
-});
+    } //end of success
+}); //end of login
