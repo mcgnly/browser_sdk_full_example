@@ -119,7 +119,7 @@ relayr.login({
                     var deleteId = String(msg[0].id);
                     //give the command to actually delete it
                     relayr.transmitters().delete().then(
-                        function fulfilled(msg) {
+                        function fulfilled(dltmsg) {
                             location.reload();
                         },
                         function rejected(err) {
