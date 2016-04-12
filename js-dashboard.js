@@ -1,16 +1,13 @@
-// $( document ).ready(function () {
-
-//init some variables
-
 //connect to cloud
 var relayr = RELAYR.init({
     // this comes from the api key page on the dashboard
     appId: keys.APP_ID,
     // this identifies my website as a 'trusted user' basically- it expects me to show up and ask for access to stuff
-    redirectUri: "http://localhost:8080/html-dashboard.html"
+    redirectUri: "http://localhost:8080/browserSDK/html-dashboard.html"
 });
 
-// these could hold the output from various sensors, based on device id for instance, so I can do multiple device calls at once and not get confused
+// these could hold the output from various sensors, based on device id for instance,
+// so I can do multiple device calls at once and not get confused
 var dev1
 var dev2
 
@@ -22,25 +19,19 @@ $(".deleteMe").on("click", function() {
 
 // in order to do anything other than get straight readings, you have to log in
 relayr.login({
-    // the login function returns a few options: success or error (I think?)
-    // the token is generated when you log in to your account in that redirect, and is passed in the local memory of the browser
+    // the login function returns success or error, 
+    // the token is generated when you log in to your account in that redirect, 
+    // and is passed in the local memory of the browser
     success: function(token) {
 
         // displays the email address associatd with the logged in user
         var userEmail = relayr.user().getUserInfo().email;
         $(".users").text(userEmail);
 
-        // this will list all the devices associated with an account
-        // relayr.devices().getDevice({
-        //     deviceId: keys.DEVICE_ID
-        // }, function(foundDevice) {
-        //     foundDevice.delete()
-        // }, function(err) {})
-
+        //get all the devices asstd with an account, the loop is just to dispay them
         relayr.devices().getAllDevices(function(devices) {
                 // loops through the object holding the devices, x gives you an index
                 for (x in devices) {
-
                     // tack the object[index].name on to the list displayed in the html
                     $('<ul>').text(devices[x].name).appendTo('.devices');
 
