@@ -41,7 +41,6 @@ relayr.login({
         relayr.devices().getAllDevices().then(
             //a fulfilled promise returns an object msg
             function fulfilled(msg) {
-                console.log(msg);
                 // loops through the object holding the devices, x gives you an index
                 for (x in msg) {
                     // tack the object[index].name on to the list displayed in the html
@@ -79,41 +78,51 @@ relayr.login({
         });
 
         // displays all of the user's groups
-        relayr.groups().getAllGroups(function(group) {
-                // loops through the object holding the groups, x gives you an index
-                for (x in group) {
+        //get all the devices asstd with an account, the loop is just to dispay them
+        relayr.groups().getAllGroups().then(
+            //a fulfilled promise returns an object msg
+            function fulfilled(msg) {
+                // loops through the object holding the devices, x gives you an index
+                for (x in msg) {
                     // tack the object[index].name on to the list displayed in the html
-                    $('<ul>').text(group[x].name).appendTo('.groups');
+                    $('<ul>').text(msg[x].name).appendTo('.groups');
                 }
             },
-            function(err) {
-                console.log("err", err)
+            //if the promise resolves as rejected it will log this error
+            function rejected(err) {
+                console.log("error, the promise was rejected")
             }
         );
 
         // displays models available to the user (including public ones)
-        relayr.models().getAllModels(function(model) {
+        relayr.models().getAllModels().then(
+            //a fulfilled promise returns an object msg
+            function fulfilled(msg) {
                 // loops through the object holding the models, x gives you an index
-                for (x in model) {
+                for (x in msg) {
                     // tack the object[index].name on to the list displayed in the html
-                    $('<ul>').text(model[x].name).appendTo('.models');
+                    $('<ul>').text(msg[x].name).appendTo('.models');
                 }
             },
-            function(err) {
-                console.log("err", err)
+            //if the promise resolves as rejected it will log this error
+            function rejected(err) {
+                console.log("error, the promise was rejected")
             }
         );
 
         // displays transmitters
-        relayr.transmitters().getTransmitters(function(transmitters) {
+        relayr.transmitters().getTransmitters().then(
+            //a fulfilled promise returns an object msg
+            function fulfilled(msg) {
                 // loops through the object holding the transmitters, x gives you an index
-                for (x in transmitters) {
+                for (x in msg) {
                     // tack the object[index].name on to the list displayed in the html
-                    $('<ul>').text(transmitters[x].name + " : " + transmitters[x].id).appendTo('.transmitterlist');
+                    $('<ul>').text(msg[x].name + " : " + msg[x].id).appendTo('.transmitterlist');
                 }
             },
-            function(err) {
-                console.log("err", err)
+            //if the promise resolves as rejected it will log this error
+            function rejected(err) {
+                console.log("error, the promise was rejected")
             }
         );
 
