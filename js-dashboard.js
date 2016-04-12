@@ -24,32 +24,35 @@ relayr.login({
     // and is passed in the local memory of the browser
     success: function(token) {
 
-        // displays the email address associatd with the logged in user
-        //var userEmail = relayr.user().getUserInfo().email;
+        //getUserInfo creates a Promise, so call .then on it
         relayr.user().getUserInfo().then(
+            //a fulfilled promise returns an object which has user properties, including email
             function fulfilled(msg) {
+                //inject this text into the html
                 $(".users").text(msg.email);
             },
+            //if the promise resolves as rejected it will log this error
             function rejected(err) {
-
+                console.log("error, the promise was rejected")
             }
         );
-        // fills it into the HTML
-
 
         //get all the devices asstd with an account, the loop is just to dispay them
-        relayr.devices().getAllDevices(
-            function(devices) {
+        relayr.devices().getAllDevices().then(
+            //a fulfilled promise returns an object msg
+            function fulfilled(msg) {
+                console.log(msg);
                 // loops through the object holding the devices, x gives you an index
-                for (x in devices) {
+                for (x in msg) {
                     // tack the object[index].name on to the list displayed in the html
-                    $('<ul>').text(devices[x].name).appendTo('.devices');
+                    $('<ul>').text(msg[x].name).appendTo('.devices');
                 }
             },
-            // it either returns a list of devices, or an error
-            function(err) {
-                console.log("err", err)
-            })
+            //if the promise resolves as rejected it will log this error
+            function rejected(err) {
+                console.log("error, the promise was rejected")
+            }
+        );
 
         // this gets the data from the devices
         relayr.devices().getDeviceData({
