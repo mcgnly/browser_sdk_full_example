@@ -3,7 +3,7 @@ var relayr = RELAYR.init({
     // this comes from the api key page on the dashboard
     appId: keys.APP_ID,
     // this identifies my website as a 'trusted user' basically- it expects me to show up and ask for access to stuff
-    redirectUri: "http://localhost:8080/browserSDK/html-dashboard.html"
+    redirectUri: "http://localhost:8080/browserSDKFullExample/html-dashboard.html"
 });
 
 // these could hold the output from various sensors, based on device id for instance,
@@ -11,11 +11,11 @@ var relayr = RELAYR.init({
 var dev1
 var dev2
 
-deleteButton = $('<button />').addClass('deleteButton').text('x');
+// deleteButton = $('<button />').addClass('deleteButton').text('x');
 
-$(".deleteMe").on("click", function() {
-    $(this).closest("li").remove();
-});
+// $(".deleteMe").on("click", function() {
+//     $(this).closest("li").remove();
+// });
 
 // in order to do anything other than get straight readings, you have to log in
 relayr.login({
@@ -25,9 +25,17 @@ relayr.login({
     success: function(token) {
 
         // displays the email address associatd with the logged in user
-        var userEmail = relayr.user().getUserInfo().email;
+        //var userEmail = relayr.user().getUserInfo().email;
+        relayr.user().getUserInfo().then(
+            function fulfilled(msg) {
+                $(".users").text(msg.email);
+            },
+            function rejected(err) {
+
+            }
+        );
         // fills it into the HTML
-        $(".users").text(userEmail);
+
 
         //get all the devices asstd with an account, the loop is just to dispay them
         relayr.devices().getAllDevices(
