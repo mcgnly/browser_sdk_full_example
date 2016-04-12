@@ -132,9 +132,11 @@ relayr.login({
                 $("#updateName").click(function() {
                     //get the ID of the transmitter at the top of the list
                     var updateId = String(msg[0].id);
-                    var name = $('.status-box').val()
-                        //give the command to update the name of the transmitter with the top ID with the text from the input box
-                    relayr.transmitters().update(updateId, name).then(
+                    var updateName = {
+                        name: $('.status-box').val()
+                    };
+                    //give the command to update the name of the transmitter with the top ID with the text from the input box
+                    relayr.transmitters().update(updateId, updateName).then(
                         function fulfilled(msg) {
                             location.reload();
                         },
