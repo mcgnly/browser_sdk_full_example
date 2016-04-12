@@ -118,12 +118,12 @@ relayr.login({
                 $("#delete").click(function() {
                     var deleteId = String(msg[0].id);
                     //give the command to actually delete it
-                    relayr.transmitters().delete().then(
-                        function fulfilled(dltmsg) {
+                    relayr.transmitters().delete(deleteId).then(
+                        function fulfilled(msg) {
                             location.reload();
                         },
                         function rejected(err) {
-
+                            console.log("error, the promise was rejected")
                         }
                     );
                 });
@@ -132,17 +132,14 @@ relayr.login({
                 $("#updateName").click(function() {
                     //get the ID of the transmitter at the top of the list
                     var updateId = String(msg[0].id);
-                    //give the command to update the name of the transmitter with the top ID with the text from the input box
-                    relayr.transmitters().update().then(
+                    var name = $('.status-box').val()
+                        //give the command to update the name of the transmitter with the top ID with the text from the input box
+                    relayr.transmitters().update(updateId, name).then(
                         function fulfilled(msg) {
-                            // location.reload(); {
-                            //     id: updateId
-                            // }, {
-                            //     name: $('.status-box').val()
-                            // }
+                            location.reload();
                         },
                         function rejected(err) {
-
+                            console.log("error, the promise was rejected")
                         });
                 });
 
