@@ -26,17 +26,17 @@ relayr.login({
 
         // displays the email address associatd with the logged in user
         var userEmail = relayr.user().getUserInfo().email;
+        // fills it into the HTML
         $(".users").text(userEmail);
 
         //get all the devices asstd with an account, the loop is just to dispay them
-        relayr.devices().getAllDevices(function(devices) {
+        relayr.devices().getAllDevices(
+            function(devices) {
                 // loops through the object holding the devices, x gives you an index
                 for (x in devices) {
                     // tack the object[index].name on to the list displayed in the html
                     $('<ul>').text(devices[x].name).appendTo('.devices');
-
                 }
-                // console.log(devices)
             },
             // it either returns a list of devices, or an error
             function(err) {
@@ -49,14 +49,12 @@ relayr.login({
             token: token,
             // identifies one device from another
             deviceId: keys.DEVICE_ID,
-
-            // this is an item in the function, which is actually a function, you can nest them like that
+            //function that grabs the reading from the data from the device
             incomingData: function(data) {
-                //console.log("data from device", data.deviceId, data);
                 dev1 = data.readings[0].value;
+                //inserts into html
                 $(".reading1").text(dev1);
             }
-
         });
 
         // same dance, different device
@@ -64,11 +62,9 @@ relayr.login({
             token: token,
             deviceId: keys.DEVICE_ID2,
             incomingData: function(data) {
-                // console.log("data from device", data.deviceId, data)
                 dev2 = data.readings[0].value
                 $(".reading2").text(dev2);
             }
-
         });
 
         // displays all of the user's groups
@@ -84,12 +80,12 @@ relayr.login({
             }
         );
 
-        // displays models belonging to the user
-        relayr.models().getAllModels(function(group) {
-                // loops through the object holding the groups, x gives you an index
-                for (x in group) {
+        // displays models available to the user (including public ones)
+        relayr.models().getAllModels(function(model) {
+                // loops through the object holding the models, x gives you an index
+                for (x in model) {
                     // tack the object[index].name on to the list displayed in the html
-                    $('<ul>').text(group[x].name).appendTo('.models');
+                    $('<ul>').text(model[x].name).appendTo('.models');
                 }
             },
             function(err) {
@@ -99,58 +95,32 @@ relayr.login({
 
         // displays transmitters
         relayr.transmitters().getTransmitters(function(transmitters) {
-                // loops through the object holding the groups, x gives you an index
+                // loops through the object holding the transmitters, x gives you an index
                 for (x in transmitters) {
                     // tack the object[index].name on to the list displayed in the html
                     $('<ul>').text(transmitters[x].name + " : " + transmitters[x].id).appendTo('.transmitterlist');
                 }
-
-
             },
             function(err) {
                 console.log("err", err)
             }
         );
 
-        // delete a transmitter from the list
-        // $(".delete").click(function(transmitters) {
-        //     relayr.transmitters().delete({
-        //             text(transmitters[0].id);
-        //         },
-        //         function(success) {
-        //             location.reload();
-        //         }, function(err) {
-        //             console.log(err)
-        //         })
-        // });
+        //define what happens when you click the delete button
         $("#delete").click(function() {
+            //get the ID of the transmitter at the top of the list
             relayr.transmitters().getTransmitters(function(transmitters) {
                 var deleteId = String(transmitters[0].id);
-                console.log(deleteId);
+                //give the command to actually delete it
                 relayr.transmitters().delete({
-                    id: deleteId
-                }, function(success) {
-                    location.reload();
-                }, function(err) {
-                    console.log(err)
-                })
-            }, function(err) {
-                console.log("err", err)
-            });
-        });
-
-        $("#updateName").click(function() {
-            relayr.transmitters().getTransmitters(function(transmitters) {
-                var updateId = String(transmitters[0].id);
-                console.log(updateId);
-                relayr.transmitters().update({
-                        id: updateId
-                    }, {
-                        name: $('.status-box').val()
+                        id: deleteId
                     },
+                    //if it works, reload the page
                     function(success) {
                         location.reload();
-                    }, function(err) {
+                    },
+                    //if not, log the error
+                    function(err) {
                         console.log(err)
                     })
             }, function(err) {
@@ -158,5 +128,29 @@ relayr.login({
             });
         });
 
-    } //end of the success parameter in the login sequence. Why is there no error option?
+        //define what happens when you click the "update name" button
+        $("#updateName").click(function() {
+            //get the ID of the transmitter at the top of the list
+            relayr.transmitters().getTransmitters(function(transmitters) {
+                var updateId = String(transmitters[0].id);
+                //give the command to update the name of the transmitter with the top ID with the text from the input box
+                relayr.transmitters().update({
+                        id: updateId
+                    }, {
+                        name: $('.status-box').val()
+                    },
+                    //reload if successful
+                    function(success) {
+                        location.reload();
+                    },
+                    //log the error if not
+                    function(err) {
+                        console.log(err)
+                    })
+            }, function(err) {
+                console.log("err", err)
+            });
+        });
+
+    }
 });
